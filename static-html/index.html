@@ -11,10 +11,12 @@
   <div id="app">
     <h2>Work</h2>
     <ul>
-      <job-button v-for="job in work" v-bind:job="job" v-bind:key="job.id"></job-button>
+      <li v-for="job in work" :key="job.id">
+        <button @click="selectJob(job)">{{ job.name }}</button>
+      </li>
     </ul>
 
-    <show-job v-if="currentJob" v-bind:job="currentJob"></show-job>
+    <show-job v-if="currentJob" :job="currentJob"></show-job>
 
     <h3>Type a job description</h3>
     <textarea v-if="currentJob" v-model="currentJob.description"></textarea>
@@ -49,13 +51,9 @@
 
     Vue.component('show-job', {
       props: ['job'],
-      template: '<div class="currentJob"><h1>{{ job.name }}</h1><p>{{ job.description }}</p></div>'
+      template: '<div class="currentJob"><h1>{{ job.name }}</h1><p v-html="job.description"></p></div>'
     })
 
-    Vue.component('job-button', {
-      props: ['job'],
-      template: '<li><button>{{ job.name }}</button></li>'
-    })
   </script>
 </body>
 </html>
