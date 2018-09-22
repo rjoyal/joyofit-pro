@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>joyofit.pro - The Joy of Internet Tech</title>
+</head>
+<body>
+  <h1>The Joy of Internet Tech</h1>
+
+  <div id="app">
+    <h2>Work</h2>
+    <ul>
+      <job-button v-for="job in work" v-bind:job="job" v-bind:key="job.id"></job-button>
+    </ul>
+
+    <show-job v-if="currentJob" v-bind:job="currentJob"></show-job>
+
+    <h3>Type a job description</h3>
+    <textarea v-if="currentJob" v-model="currentJob.description"></textarea>
+  </div>
+
+  <!-- development version --> 
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- production version --> 
+  <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        work: [],
+        currentJob: null,
+        jobDescription: ""
+      },
+      methods: {
+        selectJob: function(job) {
+          this.currentJob = job
+          this.jobDescription = ""
+        }
+      },
+      created () {
+        fetch('https://api.myjson.com/bins/y7998')
+          .then(response => response.json())
+          .then(json =>  {
+            this.work = json.work
+          })
+      }
+    })
+
+    Vue.component('show-job', {
+      props: ['job'],
+      template: '<div class="currentJob"><h1>{{ job.name }}</h1><p>{{ job.description }}</p></div>'
+    })
+
+    Vue.component('job-button', {
+      props: ['job'],
+      template: '<li><button>{{ job.name }}</button></li>'
+    })
+  </script>
+</body>
+</html>
